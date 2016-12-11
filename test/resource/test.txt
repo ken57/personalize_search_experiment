@@ -1,0 +1,33 @@
+629814
+#*hogehogepaper
+#@author1,author2
+#t2006
+#c
+#index0
+#!abst
+
+#*paper2
+#@author3
+#t2003
+#ccomputer
+#index1
+#%0
+#%2
+
+#*paper3
+#@author1,author4
+#t2003
+#ccomputer
+#index2
+
+#*paper4 fuga
+#@author3,author5
+#t2003
+#ccomputer fuga
+#index3
+
+#*paper3 computer hoge fuga
+#@author3,author6
+#t2003
+#ccomputer hoge fuga
+#index4
