@@ -1,12 +1,10 @@
 # encoding: utf-8
-
 import codecs
 import json
 import urllib.request
+import sys
 
-url = "http://localhost:9200/_bulk"
-
-def main(filename):
+def main(filename, url):
     u"""著者とクラスタの関係をインデクシングするスクリプトです."""
 
     author_class ={}
@@ -25,7 +23,7 @@ def main(filename):
         data += "{\"class\": \"" + v + "\"}\n"
         if count > 1000:
             print(data)
-            req = urllib.request.Request(url, data.encode('utf-8'))
+            req = urllib.request.Request(url + '/_bulk', data.encode('utf-8'))
             urllib.request.urlopen(req)
             data = ""
             count = 0
@@ -38,4 +36,7 @@ def main(filename):
         urllib.request.urlopen(req)
 
 if __name__ == '__main__':
-        main("../data/authors.txt")
+    argv = sys.argv
+    if len(sys.argv) < 2:
+        print("usage: python authors_indexer.py [authors file] [elasticsearch host]")
+    main(sys.argv[0], sys.argv[1])

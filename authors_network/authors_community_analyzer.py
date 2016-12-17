@@ -1,12 +1,8 @@
 # encoding: utf-8
 import community
 import networkx as nx
-import json
-from networkx.readwrite import json_graph
 import collections
 
-from authors_network.authors_network_builder import AuthorsNetworkBuilder
-from authors_network.papers_dictionary_builder import PapersDictionaryBuilder
 from authors_network.community_interest_analyzer import CommunityInterestAnalyzer
 
 class AuthorsCommunityAnalyzingResult:
@@ -59,38 +55,3 @@ class AuthorsCommunityAnalyzer:
         for k, v in partition.items():
             partition_inv[v].append(k)
         return partition_inv
-
-def main():
-    builder = AuthorsNetworkBuilder()
-    analyzer = AuthorsCommunityAnalyzer()
-    papersDictionaryBuilder = PapersDictionaryBuilder()
-    papers = papersDictionaryBuilder.build('../data/outputacm.txt')
-    print('reading papers is complete.')
-    authors = builder.build(papers)
-    print('building authors network is complete.')
-    result = analyzer.analyze(authors, papers)
-    print('analyzing networks complete.')
-    data = json_graph.node_link_data(result.induced_graph)
-    s = json.dumps(data, ensure_ascii=False)
-
-    with open('output.txt', 'w', encoding='UTF-8') as f:
-        f.write(s)
-    with open('authors.txt', 'w', encoding='UTF-8') as f:
-        for author, community in result.authors_community.items():
-            f.write(author + " " + str(community) + "\n")
-
-    '''
-    print(s)
-    authors_paper = collections.defaultdict(list)
-    for index, paper in papers.items():
-        for author in paper.authors:
-            authors_paper[author].append(paper)
-
-    for author, community in result.authors_community.items():
-        print(author, community)
-        for paper in authors_paper[author]:
-            print(paper.title)
-    '''
-
-if __name__ == '__main__':
-    main()

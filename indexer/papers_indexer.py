@@ -7,13 +7,11 @@ import json
 import urllib.request
 from authors_network.papers_dictionary_builder import PapersDictionaryBuilder
 
-url = "http://localhost:9200/_bulk"
-
-def main(filename):
+def main(papers_filename, authors_filename,url ):
     u"""論文をインデクシングするスクリプトです."""
 
     author_classes ={}
-    file = codecs.open(filename, 'r', 'utf-8')
+    file = codecs.open(authors_filename, 'r', 'utf-8')
     for line in file:
         words = line.rstrip().split(' ')
         if len(words) > 1:
@@ -22,7 +20,7 @@ def main(filename):
             author_classes[author] = cluster
 
     papersDictionaryBuilder = PapersDictionaryBuilder()
-    papers = papersDictionaryBuilder.build('../data/outputacm.txt')
+    papers = papersDictionaryBuilder.build(papers_filename)
     print(len(papers))
 
     data = ""
@@ -39,7 +37,7 @@ def main(filename):
                 + json.dumps(paper.year) + ", \"authors\": " + json.dumps(" ".join(paper.authors)) + ", \"references\": "\
                 + json.dumps(" ".join(paper.references)) + ", \"class\": " + author_class + "}\n"
             if count > 1000:
-                req = urllib.request.Request(url, data.encode('utf-8'))
+                req = urllib.request.Request(url + '/_bulk', data.encode('utf-8'))
                 urllib.request.urlopen(req)
                 data = ""
                 count = 0
@@ -52,4 +50,7 @@ def main(filename):
     urllib.request.urlopen(req)
 
 if __name__ == '__main__':
-        main("../data/authors.txt")
+    argv = sys.argv
+    if len(sys.argv) < 3:
+        print("usage: python papers_indexer.py [papers file] [authors file] [elasticsearch host]")
+    main(sys.argv[0], sys.argv[1], sys.argv[2])
