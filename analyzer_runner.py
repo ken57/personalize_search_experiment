@@ -31,6 +31,6 @@ def main(papers_filename, output_dirname):
             f.write(author + " " + str(community) + "\n")
 
 if __name__ == '__main__':
-    if len(sys.argv) < 2:
+    if len(sys.argv) < 3:
         print("usage: python analyzer_runner.py [papers filename] [output dirname]")
-    main(sys.argv[0], sys.argv[1])
+    main(sys.argv[1], sys.argv[2])
